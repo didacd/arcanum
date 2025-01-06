@@ -1,19 +1,22 @@
-[🌸🐳 HynDuf 👋](https://hynduf.github.io)
+[🪐 ARCANUM](https://arcanum.cosmere.cloud)
 ================================
 
 <p align="center">
-	<a href="https://github.com/HynDuf/hynduf.github.io/stargazers">
-		<img alt="Stargazers" src="https://img.shields.io/github/stars/HynDuf/hynduf.github.io?style=for-the-badge&logo=starship&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41"></a>
-	<a href="https://github.com/HynDuf/hynduf.github.io/issues">
-		<img alt="Issues" src="https://img.shields.io/github/issues/HynDuf/hynduf.github.io?style=for-the-badge&logo=gitbook&color=B5E8E0&logoColor=D9E0EE&labelColor=302D41"></a>
+	<a href="https://github.com/didacdomenech/arcanum/stargazers">
+		<img alt="Stargazers" src="https://img.shields.io/github/stars/didacdomenech/arcanum?style=for-the-badge&logo=starship&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41"></a>
+	<a href="https://github.com/didacdomenech/arcanum/issues">
+		<img alt="Issues" src="https://img.shields.io/github/issues/didacdomenech/arcanum?style=for-the-badge&logo=gitbook&color=B5E8E0&logoColor=D9E0EE&labelColor=302D41"></a>
 </p>
 
 
-Please read the original [README.md](https://github.com/Huxpro/huxpro.github.io) first to have the full guide.
+> [!IMPORTANT]
+> Please read the original [README.md](https://github.com/Huxpro/huxpro.github.io) first to have the full guide.
 
-This is a heavily-customized [fork](https://github.com/HynDuf/hynduf.github.io) of the incredible [Hux Blog - Jekyll Theme](https://github.com/Huxpro/huxpro.github.io). I have a blog about how I did it, [check it out](https://hynduf.github.io/2023/12/31/building-my-aesthetic-personal-site/).
+This is a [fork](https://github.com/Huxpro/huxpro.github.io) of a [fork](https://github.com/HynDuf/hynduf.github.io) of the incredible [Hux Blog - Jekyll Theme].
 
-⚠️  Note: Much of the code was added on the fly, so it may appear somewhat messy. I plan to clean it up in the future.
+> [!NOTE]
+> I plan to refactor and change a lot of this in the future but I set this fork as a foundation for my personal blog. If you want to use this, I recommend checking the original author of this code mentioned above.
+
 ## Customize
 The files you typically change are in the directories `_includes`, `_layouts`, and `less`. Most of the new changes I made are in `less/hynduf.less`.
 
@@ -44,5 +47,3 @@ Here are some previews of the revamped website.
 ![archive-dark](assets/archive-dark.png)
 ![post-light](assets/post-light.png)
 ![post-dark](assets/post-dark.png)
-
-I think that's it. Please feel free to create any issues or contribute to the site. Special thanks to [Hux Blog](https://github.com/Huxpro/huxpro.github.io) for the incredible Jekyll theme, [Catppuccin](https://github.com/catppuccin/catppuccin) for the beautiful color palette, and a big shoutout to myself for having time to waste 😋.
