@@ -2,10 +2,10 @@
 title: "📚 \  Arcanum \  🪐"
 SEOTitle: Didac's Blog
 header-img: img/hollow-knight.png
-email: hynduf@gmail.com
+email: business@didacdomenech.com
 description: "May it get me? 🌸"
-keyword: "hynduf, @hynduf, HynDuf's Blog, CP, Arch Linux, Obsidian"
-url: "https://hynduf.github.io" # your host, for absolute URL
+keyword: "didac, @didacdomenech, Didac's Blog, Arch Linux, Obsidian"
+url: "https://arcanum.cosmere.cloud" # your host, for absolute URL
 baseurl: "" # for example, '/blog' if your blog hosted on 'host/blog'
 
 # Publish posts or collection documents with a future date.
@@ -68,12 +68,12 @@ netease_comment: false
 
 # Google Analytics
 ga_track_id: "UA-49627206-1" # Format: UA-xxxxxx-xx
-ga_domain: huangxuan.me
+ga_domain: arcanum.cosmere.cloud
 
 # Sidebar settings
 sidebar: true # whether or not using Sidebar.
-sidebar-about-description: "how far down the <br/> rabbit holes 🐇, <br/> would it take me? 🤔"
-sidebar-avatar: https://github.com/hynduf.png # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-about-description: "Excited to discover the world and share it with you." # about description
+sidebar-avatar: https://github.com/didacdomenech.png # use absolute URL, seeing it's used in both `/` and `/about/`
 
 # Featured Tags
 featured-tags: true # whether or not using Feature-Tags
@@ -89,6 +89,6 @@ page-mathjax: false
 # Friends
 friends:
   [
-    { title: "Trí Phan", href: "https://triphan2k3.github.io/" },
-    { title: "Vanhger", href: "https://vanhger.github.io/" },
+    { title: "Marc Cornellà", href: "https://github.com/mcornella" },
+    { title: "Victoria", href: "https://github.com/vicky5124" },
   ]
