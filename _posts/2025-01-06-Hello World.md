@@ -2,10 +2,10 @@
 layout: post
 title: "Hello, World! 🌎"
 subtitle: "Blink, and it's another chapter gone."
-author: "HynDuf"
+author: "Dídac"
 header-img: "img/dark-magical-forest.jpg"
 header-mask: 0.4
-multilingual: true
+multilingual: false
 share-img: "img/dark-magical-forest.jpg"
 tags:
   - Life
