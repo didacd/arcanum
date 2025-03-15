@@ -3,9 +3,9 @@
 
 <p align="center">
 	<a href="https://github.com/didacdomenech/arcanum/stargazers">
-		<img alt="Stargazers" src="https://img.shields.io/github/stars/didacdomenech/arcanum?style=for-the-badge&logo=starship&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41"></a>
+		<img style="border-radius: 10px" alt="Stargazers" src="https://img.shields.io/github/stars/didacdomenech/arcanum?style=for-the-badge&logo=starship&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41"></a>
 	<a href="https://github.com/didacdomenech/arcanum/issues">
-		<img alt="Issues" src="https://img.shields.io/github/issues/didacdomenech/arcanum?style=for-the-badge&logo=gitbook&color=B5E8E0&logoColor=D9E0EE&labelColor=302D41"></a>
+		<img style="border-radius: 10px" alt="Issues" src="https://img.shields.io/github/issues/didacdomenech/arcanum?style=for-the-badge&logo=gitbook&color=B5E8E0&logoColor=D9E0EE&labelColor=302D41"></a>
 </p>
 
 
