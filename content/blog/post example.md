@@ -11,6 +11,8 @@ What a wonderfull day...
 
 > THIS IS AN IMPORTANT MESSAGE.
 
+### Code
+
 ```rust
 fn main() {
   println!("Hello, world")
@@ -20,7 +22,6 @@ fn main() {
 ```python
 def pepe(mondongo: str):
     pass
-
 ```
 
 > This is amazing!
