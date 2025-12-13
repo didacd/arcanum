@@ -1,0 +1,22 @@
+{
+  "name": "tailwind",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "tailwindcss -i ./src/input.css -o ../static/css/index.css",
+    "watch": "tailwindcss -i ./src/input.css -o ../static/css/index.css --watch"
+  },
+  "devDependencies": {
+    "@catppuccin/tailwindcss": "0.1.6",
+    "@tailwindcss/cli": "^4.1.17",
+    "@tailwindcss/typography": "^0.5.19",
+    "@types/bun": "latest",
+    "autoprefixer": "^10.4.22",
+    "jiti": "^2.6.1",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.17"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}

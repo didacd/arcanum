@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>{{ meta_data.title }} | {{ site.site_title }}</title>
+<link href="https://prismjs.catppuccin.com/mocha.css" rel="stylesheet" />
+<script src="/static/js/prism.js"></script>
+{% endblock head %}
+
+{% block content %}
+    <article 
+        id="article-content"
+        class="h-full w-full px-4 md:px-6 text-xl leading-normal prose prose-xl max-w-none prose-p:text-ctp-text prose-headings:text-ctp-text prose-a:text-ctp-blue prose-strong:text-ctp-text prose-code:text-ctp-mauve prose-pre:bg-ctp-crust prose-li:text-ctp-text prose-ul:text-ctp-text"
+    >
+        <div class="mb-4">
+            <h1 class="mb-2">{{ meta_data.title }}</h1>
+            <div class="flex items-center text-base text-ctp-subtext1 mb-2">
+                <span class="mr-4">{{ meta_data.author }}</span>
+                <span>{{ meta_data.created }}</span>
+            </div>
+            <div class="flex flex-wrap gap-2 mb-6">
+                {% for tag in meta_data.tags %}
+                <span class="bg-ctp-surface0 text-ctp-text px-2 py-1 rounded text-sm">#{{ tag }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        {{ post | safe }}
+    </article>
+{% endblock content %}
+
+{% block footer %}
+    <div class="flex w-full h-20 justify-center items-center bg-ctp-crust">
+        &copy; 2025 - Written in rust by&nbsp;<a class="font-bold text-ctp-rosewater" href="{{ site.site_url }}">Didac Domenech</a>.
+    </div>
+{% endblock footer %}

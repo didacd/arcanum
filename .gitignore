@@ -1,15 +1,3 @@
-_site
-_posts/_draft
-_posts/_archive
-_archive
-node_modules
-.vscode
-*.log
-*.lock
-*.sh
+target/
 .DS_Store
-.jekyll-cache
-*/.DS_Store
-*/*/.DS_Store
-.vendor
-.direnv
+./node_modules/
