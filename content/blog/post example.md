@@ -29,3 +29,9 @@ def pepe(mondongo: str):
 - Second item
 - Third item
 
+1. Numbers
+2. Can
+3. Be
+4. Scary
+
+😁🥇💫

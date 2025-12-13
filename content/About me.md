@@ -9,7 +9,6 @@ tags:
 
 This is an about me example page.
 
-> [!IMPORTANT]
 > This is an important message.
 
 ```python
@@ -18,3 +17,5 @@ def main():
 if __NAME__ == "__MAIN__":
 	sys.exit(main())
 ```
+
+![alt text](https://media.tenor.com/8lR3_1m-i94AAAAi/cat.gif) 
