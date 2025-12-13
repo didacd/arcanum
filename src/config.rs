@@ -7,6 +7,9 @@ use std::{env, fmt};
 pub struct SiteConfig {
     pub site_title: String,
     pub site_url: String,
+    pub username: String,
+    pub user_description: String,
+    pub user_profile: String,
     pub profile_pic: String,
     pub content_dir: String,
     pub address: String,
@@ -49,6 +52,9 @@ impl SiteConfig {
 
         let site_title = require_env("SITE_TITLE")?;
         let site_url = require_env("SITE_URL")?;
+        let username = require_env("USERNAME")?;
+        let user_description = env_or("USER_DESCRIPTION", "");
+        let user_profile = env_or("USER_PROFILE", "https://github.com/didacd");
         let profile_pic = require_env("PROFILE_PIC")?;
         let content_dir_raw = require_env("CONTENT_DIR")?;
 
@@ -67,6 +73,9 @@ impl SiteConfig {
         let conf = SiteConfig {
             site_title,
             site_url,
+            username,
+            user_description,
+            user_profile,
             profile_pic,
             content_dir,
             address,
