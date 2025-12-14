@@ -23,9 +23,10 @@ async fn main() -> std::io::Result<()> {
             .route("/health", web::get().to(HttpResponse::Ok))
             .service(actix_files::Files::new("/static", "./static"))
             .service(server::index)
-            .service(server::page_debug)
-            .service(server::blog)
+            .service(server::blog_post)
             .service(server::about_me)
+            .service(server::debug_posts)
+            .service(server::get_post_json)
     });
     server.bind(bind)?.run().await
 }

@@ -4,5 +4,5 @@ mod routes;
 mod templates;
 
 // Expose server modules
-pub use content_renderer::read_markdown_files;
-pub use routes::{blog, index, page_debug, about_me};
+pub use routes::blog::{blog_post, index, about_me};
+pub use routes::api::{debug_posts, get_post_json};

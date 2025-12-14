@@ -1,4 +1,5 @@
 use env_logger::{Builder, Env};
+use log::info;
 use std::sync::Once;
 use std::{env, fmt};
 
@@ -38,6 +39,21 @@ impl std::error::Error for ConfigError {}
 /// Load configuration from environment / .env.
 /// Fails only if a required variable is absent (SITE_TITLE, CONTENT_DIR) or PORT is invalid.
 impl SiteConfig {
+    fn to_log_entries(&self) -> Vec<String> {
+        vec![
+            format!("site_title: {}", self.site_title),
+            format!("site_url: {}", self.site_url),
+            format!("username: {}", self.username),
+            format!("user_description: {}", self.user_description),
+            format!("user_profile: {}", self.user_profile),
+            format!("profile_pic: {}", self.profile_pic),
+            format!("content_dir: {}", self.content_dir),
+            format!("address: {}", self.address),
+            format!("port: {}", self.port),
+            format!("logging: {}", self.logging),
+        ]
+    }
+
     pub fn load_config() -> Result<SiteConfig, ConfigError> {
         // Load .env if present (ignore if missing)
         let _ = dotenvy::dotenv();
@@ -82,7 +98,6 @@ impl SiteConfig {
             port,
             logging,
         };
-        println!("Current site configuration:\n{:#?}", conf); // Debugging site configuration
 
         // Loads the current configuration
         static INIT: Once = Once::new();
@@ -91,6 +106,10 @@ impl SiteConfig {
             let env = Env::default().default_filter_or(&conf.logging);
             Builder::from_env(env).init();
         });
+
+        for entry in conf.to_log_entries() {
+            info!("{}", entry);
+        }
         Ok(conf)
     }
 }

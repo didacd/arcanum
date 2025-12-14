@@ -1,7 +1,7 @@
 use crate::config::SiteConfig;
 use askama::Template;
 
-use super::content_renderer::{Frontmatter, Page};
+use super::content_renderer::{Frontmatter, PageSummary};
 
 // base.html takes extension from either of these two:
 
@@ -10,7 +10,7 @@ use super::content_renderer::{Frontmatter, Page};
 pub struct HomeTemplate<'a> {
     pub site: &'a SiteConfig,
     pub homepage_html: String,
-    pub posts: Vec<Page>,
+    pub posts: Vec<PageSummary>,
 }
 
 #[derive(Template)]
@@ -19,5 +19,5 @@ pub struct PostTemplate<'a> {
     pub site: &'a SiteConfig,
     pub meta_data: Frontmatter,
     pub post: String,
-    pub posts: Vec<Page>,
+    pub posts: Vec<PageSummary>,
 }

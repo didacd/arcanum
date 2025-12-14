@@ -298,9 +298,11 @@ dependencies = [
  "dotenvy",
  "env_logger",
  "gray_matter",
+ "log",
  "markdown",
  "pulldown-cmark",
  "serde",
+ "serde_json",
  "serde_yaml",
 ]
 
