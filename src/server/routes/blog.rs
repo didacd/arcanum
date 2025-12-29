@@ -1,10 +1,10 @@
 use actix_web::{HttpResponse, Responder, get, http::header::ContentType, web};
-use std::path::Path;
 use log::error;
+use std::path::Path;
 
-use crate::server::content_renderer::{read_markdown_files, read_markdown_file};
-use crate::server::templates::{HomeTemplate, PostTemplate};
 use crate::SiteConfig;
+use crate::server::content_renderer::{read_markdown_file, read_markdown_files};
+use crate::server::templates::{HomeTemplate, PostTemplate};
 use askama::Template;
 
 #[get("/")]
@@ -48,7 +48,7 @@ async fn about_me(site_config: web::Data<SiteConfig>) -> impl Responder {
 
         let tmpl = PostTemplate {
             site: &site_config,
-            meta_data: page.metadata,
+            metadata: page.metadata,
             post: page.rendered_html,
             posts: blog_pages,
         };
@@ -70,20 +70,20 @@ async fn about_me(site_config: web::Data<SiteConfig>) -> impl Responder {
 async fn blog_post(path: web::Path<String>, site_config: web::Data<SiteConfig>) -> impl Responder {
     let entry = path.into_inner();
     let location = Path::new(&site_config.content_dir).join("blog");
-    
+
     // Attempt to read the specific file first
     if let Some(page) = read_markdown_file(&location, &entry) {
         // We still need the list of posts for the sidebar/template
         let pages = read_markdown_files(&location);
-        
+
         match pages {
             Ok(list) => {
                 let mut pages_list_for_tmpl = list;
                 pages_list_for_tmpl.sort_by(|a, b| b.metadata.created.cmp(&a.metadata.created));
-                
+
                 let tmpl = PostTemplate {
                     site: &site_config,
-                    meta_data: page.metadata,
+                    metadata: page.metadata,
                     post: page.rendered_html,
                     posts: pages_list_for_tmpl,
                 };

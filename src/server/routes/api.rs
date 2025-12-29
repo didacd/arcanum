@@ -26,6 +26,21 @@ struct PostDetail {
     content: String,
 }
 
+#[derive(Serialize)]
+struct SiteApi {
+    health: Health,
+}
+#[derive(Serialize)]
+enum Health {
+    Ok,
+}
+
+#[get("/api")]
+async fn api_health() -> impl Responder {
+    let api_state = SiteApi { health: Health::Ok };
+    HttpResponse::Ok().json(api_state)
+}
+
 #[get("/api/posts")]
 async fn debug_posts(site_config: web::Data<SiteConfig>) -> impl Responder {
     let location = Path::new(&site_config.content_dir).join("blog");

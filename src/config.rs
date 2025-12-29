@@ -59,12 +59,10 @@ impl SiteConfig {
         let _ = dotenvy::dotenv();
 
         // Helpers to reduce boilerplate
-        let require_env = |name: &'static str| {
-            env::var(name).map_err(|_| ConfigError::MissingVar(name))
-        };
-        let env_or = |name: &str, default: &str| {
-            env::var(name).unwrap_or_else(|_| default.to_string())
-        };
+        let require_env =
+            |name: &'static str| env::var(name).map_err(|_| ConfigError::MissingVar(name));
+        let env_or =
+            |name: &str, default: &str| env::var(name).unwrap_or_else(|_| default.to_string());
 
         let site_title = require_env("SITE_TITLE")?;
         let site_url = require_env("SITE_URL")?;
@@ -108,7 +106,7 @@ impl SiteConfig {
         });
 
         for entry in conf.to_log_entries() {
-            info!("{}", entry);
+            info!("{entry}");
         }
         Ok(conf)
     }

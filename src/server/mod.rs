@@ -4,5 +4,5 @@ mod routes;
 mod templates;
 
 // Expose server modules
-pub use routes::blog::{blog_post, index, about_me};
-pub use routes::api::{debug_posts, get_post_json};
+pub use routes::api::*;
+pub use routes::blog::{about_me, blog_post, index};

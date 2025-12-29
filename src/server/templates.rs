@@ -17,7 +17,7 @@ pub struct HomeTemplate<'a> {
 #[template(path = "post.html")]
 pub struct PostTemplate<'a> {
     pub site: &'a SiteConfig,
-    pub meta_data: Frontmatter,
+    pub metadata: Frontmatter,
     pub post: String,
     pub posts: Vec<PageSummary>,
 }

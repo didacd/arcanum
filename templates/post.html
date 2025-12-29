@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block head %}
-<title>{{ meta_data.title }} | {{ site.site_title }}</title>
+<title>{{ metadata.title }} | {{ site.site_title }}</title>
 <link href="https://prismjs.catppuccin.com/mocha.css" rel="stylesheet" />
 <script src="/static/js/prism.js"></script>
 {% endblock head %}
@@ -12,13 +12,13 @@
         class="h-full w-full px-4 md:px-6 text-xl leading-normal prose prose-xl max-w-none prose-p:text-ctp-text prose-headings:text-ctp-text prose-a:text-ctp-blue prose-strong:text-ctp-text prose-code:text-ctp-mauve prose-pre:bg-ctp-crust prose-li:text-ctp-text prose-ul:text-ctp-text overflow-hidden"
     >
         <div class="mb-4">
-            <h1 class="mb-2 mt-10">{{ meta_data.title }}</h1>
+            <h1 class="mb-2 mt-10">{{ metadata.title }}</h1>
             <div class="flex items-center text-base text-ctp-subtext1 mb-2">
-                <span class="mr-4">{{ meta_data.author }}</span>
-                <span>{{ meta_data.created }}</span>
+                <span class="mr-4">{{ metadata.author }}</span>
+                <span>{{ metadata.created }}</span>
             </div>
             <div class="flex flex-wrap gap-2 mb-6">
-                {% for tag in meta_data.tags %}
+                {% for tag in metadata.tags %}
                 <span class="bg-ctp-surface0 text-ctp-text px-2 py-1 rounded text-sm">#{{ tag }}</span>
                 {% endfor %}
             </div>

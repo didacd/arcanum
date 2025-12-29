@@ -27,6 +27,7 @@ async fn main() -> std::io::Result<()> {
             .service(server::about_me)
             .service(server::debug_posts)
             .service(server::get_post_json)
+            .service(server::api_health)
     });
     server.bind(bind)?.run().await
 }
