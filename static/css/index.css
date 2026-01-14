@@ -1103,17 +1103,11 @@
   .\!text-ctp-green {
     color: var(--ctp-green) !important;
   }
-  .\!text-ctp-red {
-    color: var(--ctp-red) !important;
-  }
   .\!text-ctp-sapphire {
     color: var(--ctp-sapphire) !important;
   }
   .\!text-ctp-yellow {
     color: var(--ctp-yellow) !important;
-  }
-  .text-ctp-blue {
-    color: var(--ctp-blue);
   }
   .text-ctp-mauve {
     color: var(--ctp-mauve);
@@ -1157,9 +1151,6 @@
   }
   .ring-ctp-mauve {
     --tw-ring-color: var(--ctp-mauve);
-  }
-  .ring-ctp-pink {
-    --tw-ring-color: var(--ctp-pink);
   }
   .transition-colors {
     transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;

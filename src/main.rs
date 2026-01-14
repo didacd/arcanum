@@ -4,6 +4,7 @@ use actix_web::{
     App, HttpResponse, HttpServer, middleware,
     web::{self},
 };
+use actix_web_prom::PrometheusMetricsBuilder;
 use config::SiteConfig;
 
 #[actix_web::main]
@@ -15,9 +16,15 @@ async fn main() -> std::io::Result<()> {
 
     let bind = format!("{}:{}", site_config.address, site_config.port);
 
+    //let prometheus = PrometheusMetricsBuilder::new("api")
+    //    .endpoint("/metrics")
+    //    .build()
+    //    .unwrap();
+
     let server = HttpServer::new(move || {
         App::new()
             .wrap(middleware::Logger::default())
+            //.wrap(prometheus.clone())
             // Adds SiteConfig for debugging purposes
             .app_data(web::Data::new(site_config.clone()))
             .route("/health", web::get().to(HttpResponse::Ok))

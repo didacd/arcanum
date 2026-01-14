@@ -1,5 +1,6 @@
 mod content_renderer;
 mod lib;
+mod metrics;
 mod routes;
 mod templates;
 
