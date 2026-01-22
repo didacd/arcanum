@@ -76,7 +76,14 @@ impl SiteConfig {
         let profile_pic = require_env("PROFILE_PIC")?;
         let content_dir_raw = require_env("CONTENT_DIR")?;
         let content_repo_url = env::var("CONTENT_REPO_URL").ok();
-        let webhook_secret = env::var("WEBHOOK_SECRET").ok();
+
+        // Support Kubernetes/Docker secrets mounted as files
+        // Priority: WEBHOOK_SECRET_FILE (content of file) > WEBHOOK_SECRET (env var value)
+        let webhook_secret = env::var("WEBHOOK_SECRET_FILE")
+            .ok()
+            .and_then(|path| std::fs::read_to_string(path).ok())
+            .map(|s| s.trim().to_string())
+            .or_else(|| env::var("WEBHOOK_SECRET").ok());
 
         let address = env_or("ADDRESS", "0.0.0.0");
         let port = env_or("PORT", "8080")
