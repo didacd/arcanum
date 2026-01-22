@@ -1,6 +1,12 @@
-# 🎨 Arcanum - Blogging made in Rust
+# 🎨 Arcanum - Self-hosted blog made in _Rust_
 
-> [!tldr] Blogging made with _Rust_
+## Prerequisites
+
+Testing locally:
+
+1. Install the [Rust toolchain](https://rustup.rs/).
+2. Install Bun/nodejs/npm for tailwindcss.
+3.
 
 ## Using with Kubernetes
 
