@@ -13,6 +13,8 @@ pub struct SiteConfig {
     pub user_profile: String,
     pub profile_pic: String,
     pub content_dir: String,
+    pub content_repo_url: Option<String>,
+    pub webhook_secret: Option<String>,
     pub address: String,
     pub port: u16,
     pub logging: String,
@@ -48,6 +50,8 @@ impl SiteConfig {
             format!("user_profile: {}", self.user_profile),
             format!("profile_pic: {}", self.profile_pic),
             format!("content_dir: {}", self.content_dir),
+            format!("content_repo_url: {:?}", self.content_repo_url),
+            format!("webhook_secret: {:?}", self.webhook_secret),
             format!("address: {}", self.address),
             format!("port: {}", self.port),
             format!("logging: {}", self.logging),
@@ -71,6 +75,8 @@ impl SiteConfig {
         let user_profile = env_or("USER_PROFILE", "https://github.com/didacd");
         let profile_pic = require_env("PROFILE_PIC")?;
         let content_dir_raw = require_env("CONTENT_DIR")?;
+        let content_repo_url = env::var("CONTENT_REPO_URL").ok();
+        let webhook_secret = env::var("WEBHOOK_SECRET").ok();
 
         let address = env_or("ADDRESS", "0.0.0.0");
         let port = env_or("PORT", "8080")
@@ -92,6 +98,8 @@ impl SiteConfig {
             user_profile,
             profile_pic,
             content_dir,
+            content_repo_url,
+            webhook_secret,
             address,
             port,
             logging,

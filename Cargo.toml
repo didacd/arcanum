@@ -21,3 +21,9 @@ serde_json = "1.0"
 # Monitoring
 prometheus = "0.14.0"
 actix-web-prom = "0.10.0"
+
+# Git Repository synchronization
+git2 = "0.20.3"
+hmac = "0.12.1"
+sha2 = "0.10.9"
+hex = "0.4.3"

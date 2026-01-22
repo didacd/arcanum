@@ -14,6 +14,16 @@ async fn main() -> std::io::Result<()> {
         Err(e) => panic!("There was a problem with the site configuration:\n {e:?}"),
     };
 
+    if let Some(repo_url) = &site_config.content_repo_url {
+        let git_manager = server::git_content::GitContentManager::new(
+            repo_url.clone(),
+            site_config.content_dir.clone(),
+        );
+        if let Err(e) = git_manager.sync() {
+            log::warn!("Failed to initialize git content: {}", e);
+        }
+    }
+
     let bind = format!("{}:{}", site_config.address, site_config.port);
 
     //let prometheus = PrometheusMetricsBuilder::new("api")
@@ -35,6 +45,7 @@ async fn main() -> std::io::Result<()> {
             .service(server::debug_posts)
             .service(server::get_post_json)
             .service(server::api_health)
+            .service(server::update_content)
     });
     server.bind(bind)?.run().await
 }
