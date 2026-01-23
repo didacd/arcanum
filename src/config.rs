@@ -70,10 +70,18 @@ impl SiteConfig {
         let _ = dotenvy::dotenv();
 
         // Helpers to reduce boilerplate
-        let require_env =
-            |name: &'static str| env::var(name).map_err(|_| ConfigError::MissingVar(name));
-        let env_or =
-            |name: &str, default: &str| env::var(name).unwrap_or_else(|_| default.to_string());
+        let sanitize = |s: String| s.trim().trim_matches('"').trim_matches('\'').to_string();
+
+        let require_env = |name: &'static str| {
+            env::var(name)
+                .map(sanitize)
+                .map_err(|_| ConfigError::MissingVar(name))
+        };
+        let env_or = |name: &str, default: &str| {
+            env::var(name)
+                .map(sanitize)
+                .unwrap_or_else(|_| default.to_string())
+        };
 
         let site_title = require_env("SITE_TITLE")?;
         let site_url = require_env("SITE_URL")?;
@@ -82,13 +90,13 @@ impl SiteConfig {
         let user_profile = env_or("USER_PROFILE", "https://github.com/didacd");
         let profile_pic = require_env("PROFILE_PIC")?;
         let content_dir_raw = require_env("CONTENT_DIR")?;
-        let content_repo_url = env::var("CONTENT_REPO_URL").ok();
+        let content_repo_url = env::var("CONTENT_REPO_URL").ok().map(sanitize);
 
         let git_token = env::var("GIT_TOKEN_FILE")
             .ok()
             .and_then(|path| std::fs::read_to_string(path).ok())
             .map(|s| s.trim().to_string())
-            .or_else(|| env::var("GIT_TOKEN").ok());
+            .or_else(|| env::var("GIT_TOKEN").ok().map(sanitize));
 
         // Support Kubernetes/Docker secrets mounted as files
         // Priority: WEBHOOK_SECRET_FILE (content of file) > WEBHOOK_SECRET (env var value)
@@ -96,7 +104,7 @@ impl SiteConfig {
             .ok()
             .and_then(|path| std::fs::read_to_string(path).ok())
             .map(|s| s.trim().to_string())
-            .or_else(|| env::var("WEBHOOK_SECRET").ok());
+            .or_else(|| env::var("WEBHOOK_SECRET").ok().map(sanitize));
 
         let poll_interval = env::var("POLL_INTERVAL")
             .ok()
@@ -143,5 +151,52 @@ impl SiteConfig {
             info!("{entry}");
         }
         Ok(conf)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::env;
+
+    fn clear_env_vars() {
+        unsafe {
+            env::remove_var("SITE_TITLE");
+            env::remove_var("SITE_URL");
+            env::remove_var("USERNAME");
+            env::remove_var("PROFILE_PIC");
+            env::remove_var("CONTENT_DIR");
+            env::remove_var("CONTENT_REPO_URL");
+            env::remove_var("GIT_TOKEN");
+            env::remove_var("WEBHOOK_SECRET");
+        }
+    }
+
+    #[test]
+    fn test_load_config_sanitizes_quotes() {
+        // Setup minimal required env vars
+        clear_env_vars();
+        unsafe {
+            env::set_var("SITE_TITLE", "\"My Blog\"");
+            env::set_var("SITE_URL", "'https://example.com'");
+            env::set_var("USERNAME", "\"user\"");
+            env::set_var("PROFILE_PIC", "pic.jpg");
+            env::set_var("CONTENT_DIR", "\"/var/www/content/\"");
+
+            // Test the problematic variable specifically
+            env::set_var("CONTENT_REPO_URL", "\"https://github.com/user/repo\"");
+            env::set_var("GIT_TOKEN", "'secret_token'");
+        }
+
+        let config = SiteConfig::load_config().expect("Failed to load config");
+
+        assert_eq!(config.site_title, "My Blog");
+        assert_eq!(config.site_url, "https://example.com");
+        assert_eq!(config.content_dir, "/var/www/content/");
+        assert_eq!(
+            config.content_repo_url,
+            Some("https://github.com/user/repo".to_string())
+        );
+        assert_eq!(config.git_token, Some("secret_token".to_string()));
     }
 }

@@ -4,7 +4,7 @@ use actix_web::{
     App, HttpResponse, HttpServer, middleware,
     web::{self},
 };
-use actix_web_prom::PrometheusMetricsBuilder;
+//use actix_web_prom::PrometheusMetricsBuilder;
 use config::SiteConfig;
 
 #[actix_web::main]

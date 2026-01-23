@@ -97,8 +97,12 @@ impl GitContentManager {
         // Fetch the main branch
         // Refspec: map remote main to local main. This is more robust than relying on FETCH_HEAD.
         // We force update (+) to ensure local main always matches remote main, even if history was rewritten.
+        // We also fetch main just in case
         if let Err(e) = remote.fetch(
-            &["+refs/heads/master:refs/heads/master"],
+            &[
+                "+refs/heads/master:refs/heads/master",
+                "+refs/heads/main:refs/heads/main",
+            ],
             Some(&mut fetch_options),
             None,
         ) {
