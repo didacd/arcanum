@@ -34,7 +34,7 @@ pub async fn update_content(
             return HttpResponse::BadRequest().body("Invalid signature format");
         };
 
-        let mut mac = match Hmac::<Sha256>::new_from_slice(secret.as_bytes()) {
+        let mut mac_verify = match Hmac::<Sha256>::new_from_slice(secret.as_bytes()) {
             Ok(m) => m,
             Err(e) => {
                 error!("Invalid HMAC secret configuration: {}", e);
@@ -42,21 +42,14 @@ pub async fn update_content(
             }
         };
 
-        mac.update(&payload);
-
-        let expected_signature = hex::encode(mac.finalize().into_bytes());
-        
-        // Constant time comparison is handled by verify_slice in a real scenario to prevent timing attacks,
-        // but simple string comparison here for simplicity or use subtle crate.
-        // Hmac::verify_slice uses subtle::ConstantTimeEq.
-        
-        // Re-calculate MAC for verification
-        let mut mac_verify = Hmac::<Sha256>::new_from_slice(secret.as_bytes()).unwrap();
         mac_verify.update(&payload);
-        
-        if mac_verify.verify_slice(&hex::decode(signature_hex).unwrap_or_default()).is_err() {
-             warn!("Webhook signature mismatch. Expected: {}, Got: {}", expected_signature, signature_hex);
-             return HttpResponse::Unauthorized().body("Invalid signature");
+
+        if mac_verify
+            .verify_slice(&hex::decode(signature_hex).unwrap_or_default())
+            .is_err()
+        {
+            warn!("Webhook signature mismatch. Verification failed.");
+            return HttpResponse::Unauthorized().body("Invalid signature");
         }
     }
 
