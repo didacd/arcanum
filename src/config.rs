@@ -53,8 +53,11 @@ impl SiteConfig {
             format!("profile_pic: {}", self.profile_pic),
             format!("content_dir: {}", self.content_dir),
             format!("content_repo_url: {:?}", self.content_repo_url),
-            format!("git_token: {:?}", self.git_token),
-            format!("webhook_secret: {:?}", self.webhook_secret),
+            format!("git_token: {:?}", self.git_token.as_ref().map(|_| "****")),
+            format!(
+                "webhook_secret: {:?}",
+                self.webhook_secret.as_ref().map(|_| "****")
+            ),
             format!("poll_interval: {:?}", self.poll_interval),
             format!("address: {}", self.address),
             format!("port: {}", self.port),

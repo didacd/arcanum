@@ -52,8 +52,9 @@ impl GitContentManager {
                 info!("Found existing repository at {:?}", path);
                 // Try to update. If it fails (e.g. corruption during fetch), treat as invalid.
                 if let Err(e) = self.update_repo(&repo) {
-                    warn!("Repository exists but update failed (possible corruption): {}. Attempting to repair...", e);
-                    self.clean_and_clone(path, e)
+                    warn!("Repository exists but update failed: {}. Skipping auto-repair to avoid loops.", e);
+                    // Return the error instead of looping clean_and_clone
+                    Err(e)
                 } else {
                     Ok(())
                 }
@@ -94,20 +95,43 @@ impl GitContentManager {
         fetch_options.remote_callbacks(callbacks);
 
         // Fetch the main branch
-        if let Err(e) = remote.fetch(&["main"], Some(&mut fetch_options), None) {
-            error!(
+        // Refspec: map remote main to local main. This is more robust than relying on FETCH_HEAD.
+        // We force update (+) to ensure local main always matches remote main, even if history was rewritten.
+        if let Err(e) = remote.fetch(
+            &["+refs/heads/master:refs/heads/master"],
+            Some(&mut fetch_options),
+            None,
+        ) {
+            // Check if error is related to authentication
+            if e.class() == git2::ErrorClass::Http && e.code() == git2::ErrorCode::Auth {
+                error!("Authentication failed fetching remote: {}", e);
+                return Err(e);
+            }
+
+            warn!(
                 "Failed to fetch remote: {}. Check if the repo is valid or corrupted.",
                 e
             );
-            // If fetch fails due to corruption (or any other reason), propagate the error
-            // so the caller can trigger the self-healing (clean_and_clone).
             return Err(e);
         }
 
-        // Find the commit we just fetched (FETCH_HEAD)
-        let fetch_head = repo.find_reference("FETCH_HEAD")?;
-        let fetch_commit = repo.reference_to_annotated_commit(&fetch_head)?;
-        let object = repo.find_object(fetch_commit.id(), None)?;
+        // After fetching to refs/heads/main, we find that reference directly
+        let head_ref = match repo.find_reference("refs/heads/main") {
+            Ok(r) => r,
+            Err(_) => {
+                // If refs/heads/main is missing, check remote/origin/main
+                match repo.find_reference("refs/remotes/origin/master") {
+                    Ok(r) => r,
+                    Err(e) => {
+                        warn!("Failed to find main branch reference: {}", e);
+                        return Err(e);
+                    }
+                }
+            }
+        };
+
+        let head_commit = repo.reference_to_annotated_commit(&head_ref)?;
+        let object = repo.find_object(head_commit.id(), None)?;
 
         // Hard reset the working directory to this commit
         // This discards any local changes, which is desired for this "read-only mirror" use case
