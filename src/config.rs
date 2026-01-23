@@ -14,7 +14,9 @@ pub struct SiteConfig {
     pub profile_pic: String,
     pub content_dir: String,
     pub content_repo_url: Option<String>,
+    pub git_token: Option<String>,
     pub webhook_secret: Option<String>,
+    pub poll_interval: Option<u64>,
     pub address: String,
     pub port: u16,
     pub logging: String,
@@ -51,7 +53,9 @@ impl SiteConfig {
             format!("profile_pic: {}", self.profile_pic),
             format!("content_dir: {}", self.content_dir),
             format!("content_repo_url: {:?}", self.content_repo_url),
+            format!("git_token: {:?}", self.git_token),
             format!("webhook_secret: {:?}", self.webhook_secret),
+            format!("poll_interval: {:?}", self.poll_interval),
             format!("address: {}", self.address),
             format!("port: {}", self.port),
             format!("logging: {}", self.logging),
@@ -77,6 +81,12 @@ impl SiteConfig {
         let content_dir_raw = require_env("CONTENT_DIR")?;
         let content_repo_url = env::var("CONTENT_REPO_URL").ok();
 
+        let git_token = env::var("GIT_TOKEN_FILE")
+            .ok()
+            .and_then(|path| std::fs::read_to_string(path).ok())
+            .map(|s| s.trim().to_string())
+            .or_else(|| env::var("GIT_TOKEN").ok());
+
         // Support Kubernetes/Docker secrets mounted as files
         // Priority: WEBHOOK_SECRET_FILE (content of file) > WEBHOOK_SECRET (env var value)
         let webhook_secret = env::var("WEBHOOK_SECRET_FILE")
@@ -84,6 +94,10 @@ impl SiteConfig {
             .and_then(|path| std::fs::read_to_string(path).ok())
             .map(|s| s.trim().to_string())
             .or_else(|| env::var("WEBHOOK_SECRET").ok());
+
+        let poll_interval = env::var("POLL_INTERVAL")
+            .ok()
+            .and_then(|v| v.parse::<u64>().ok());
 
         let address = env_or("ADDRESS", "0.0.0.0");
         let port = env_or("PORT", "8080")
@@ -106,7 +120,9 @@ impl SiteConfig {
             profile_pic,
             content_dir,
             content_repo_url,
+            git_token,
             webhook_secret,
+            poll_interval,
             address,
             port,
             logging,

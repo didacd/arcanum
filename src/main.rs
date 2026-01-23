@@ -18,9 +18,34 @@ async fn main() -> std::io::Result<()> {
         let git_manager = server::git_content::GitContentManager::new(
             repo_url.clone(),
             site_config.content_dir.clone(),
+            site_config.git_token.clone(),
         );
+
+        // Initial sync
         if let Err(e) = git_manager.sync() {
             log::warn!("Failed to initialize git content: {}", e);
+        }
+
+        // Start polling if configured
+        if let Some(interval_secs) = site_config.poll_interval {
+            log::info!("Starting content poller with {}s interval", interval_secs);
+            let git_manager = git_manager.clone();
+            actix_web::rt::spawn(async move {
+                let mut interval = actix_web::rt::time::interval(std::time::Duration::from_secs(interval_secs));
+                loop {
+                    interval.tick().await;
+                    log::info!("Polling for content updates...");
+                    // Use web::block for blocking git operations
+                    match actix_web::web::block({
+                        let manager = git_manager.clone();
+                        move || manager.sync()
+                    }).await {
+                        Ok(Ok(_)) => log::info!("Poll: Content synchronized successfully"),
+                        Ok(Err(e)) => log::warn!("Poll: Failed to sync content: {}", e),
+                        Err(e) => log::error!("Poll: Internal task error: {}", e),
+                    }
+                }
+            });
         }
     }
 

@@ -65,6 +65,7 @@ pub async fn update_content(
          let git_manager = GitContentManager::new(
             repo_url.clone(),
             site_config.content_dir.clone(),
+            site_config.git_token.clone(),
         );
 
         match web::block(move || git_manager.sync()).await {

@@ -16,14 +16,16 @@ use std::path::Path;
 pub struct GitContentManager {
     repo_url: String,
     local_path: String,
+    git_token: Option<String>,
 }
 
 impl GitContentManager {
     /// Creates a new manager instance.
-    pub fn new(repo_url: String, local_path: String) -> Self {
+    pub fn new(repo_url: String, local_path: String, git_token: Option<String>) -> Self {
         Self {
             repo_url,
             local_path,
+            git_token,
         }
     }
 
@@ -48,7 +50,13 @@ impl GitContentManager {
         match Repository::open(path) {
             Ok(repo) => {
                 info!("Found existing repository at {:?}", path);
-                self.update_repo(&repo)
+                // Try to update. If it fails (e.g. corruption during fetch), treat as invalid.
+                if let Err(e) = self.update_repo(&repo) {
+                    warn!("Repository exists but update failed (possible corruption): {}. Attempting to repair...", e);
+                    self.clean_and_clone(path, e)
+                } else {
+                    Ok(())
+                }
             }
             Err(e) => {
                 warn!(
@@ -67,11 +75,34 @@ impl GitContentManager {
         // We assume 'origin' is the remote we care about
         let mut remote = repo.find_remote("origin")?;
 
-        // Configure fetch options (default is usually fine for public http)
+        // Configure fetch options
         let mut fetch_options = FetchOptions::new();
 
+        let git_token = self.git_token.clone();
+
+        // This is crucial for handling authentication if the user provides https credentials
+        // in the URL (e.g., https://user:token@github.com/repo.git).
+        // Without this callback, libgit2 fails when it encounters an auth challenge.
+        let mut callbacks = git2::RemoteCallbacks::new();
+        callbacks.credentials(move |_url, username_from_url, _allowed_types| {
+            if let Some(token) = &git_token {
+                git2::Cred::userpass_plaintext(username_from_url.unwrap_or("git"), token)
+            } else {
+                git2::Cred::userpass_plaintext(username_from_url.unwrap_or("git"), "")
+            }
+        });
+        fetch_options.remote_callbacks(callbacks);
+
         // Fetch the main branch
-        remote.fetch(&["main"], Some(&mut fetch_options), None)?;
+        if let Err(e) = remote.fetch(&["main"], Some(&mut fetch_options), None) {
+            error!(
+                "Failed to fetch remote: {}. Check if the repo is valid or corrupted.",
+                e
+            );
+            // If fetch fails due to corruption (or any other reason), propagate the error
+            // so the caller can trigger the self-healing (clean_and_clone).
+            return Err(e);
+        }
 
         // Find the commit we just fetched (FETCH_HEAD)
         let fetch_head = repo.find_reference("FETCH_HEAD")?;
@@ -91,6 +122,22 @@ impl GitContentManager {
         info!("Cloning {} into {:?}", self.repo_url, path);
 
         let mut builder = RepoBuilder::new();
+
+        // Add credentials callback for clone
+        let mut fetch_options = FetchOptions::new();
+        let git_token = self.git_token.clone();
+
+        let mut callbacks = git2::RemoteCallbacks::new();
+        callbacks.credentials(move |_url, username_from_url, _allowed_types| {
+            if let Some(token) = &git_token {
+                git2::Cred::userpass_plaintext(username_from_url.unwrap_or("git"), token)
+            } else {
+                git2::Cred::userpass_plaintext(username_from_url.unwrap_or("git"), "")
+            }
+        });
+        fetch_options.remote_callbacks(callbacks);
+        builder.fetch_options(fetch_options);
+
         match builder.clone(&self.repo_url, path) {
             Ok(_) => {
                 info!("Repository cloned successfully.");
