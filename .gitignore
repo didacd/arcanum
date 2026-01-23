@@ -3,4 +3,4 @@ target/
 ./node_modules/
 .env
 .obsidian/
-.content/
+content/
